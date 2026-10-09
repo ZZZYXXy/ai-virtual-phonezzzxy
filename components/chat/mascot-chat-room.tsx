@@ -619,7 +619,10 @@ export function MascotChatRoom({ onBack, onDeleted }: MascotChatRoomProps) {
             loadMoreRestoreRef.current = null;
             return;
         }
-        scheduleMascotBottomScroll(!initialScrollReady);
+        // 初始加载时强制滚动到底部，之后只在用户停留在底部时自动滚动
+        if (!initialScrollReady || stickToBottomRef.current) {
+            scheduleMascotBottomScroll(!initialScrollReady);
+        }
     }, [chat.hydrated, imageLoadSignature, initialScrollReady, scheduleMascotBottomScroll, scrollSignature, visibleMascotMessageCount]);
 
     useEffect(() => () => {
