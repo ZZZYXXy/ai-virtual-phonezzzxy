@@ -476,7 +476,7 @@ export function MascotChatRoom({ onBack, onDeleted }: MascotChatRoomProps) {
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
     const bottomScrollTimersRef = useRef<number[]>([]);
     const loadMoreRestoreRef = useRef<{ scrollHeight: number; scrollTop: number } | null>(null);
-    const stickToBottomRef = useRef(true);
+    const stickToBottomRef = useRef(false); // 初始为 false，完成首次滚动后再设为 true
     const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const longPressStartRef = useRef<ContextMenuAnchor | null>(null);
     const longPressTriggeredRef = useRef(false);
