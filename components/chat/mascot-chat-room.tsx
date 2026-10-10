@@ -476,7 +476,7 @@ export function MascotChatRoom({ onBack, onDeleted }: MascotChatRoomProps) {
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
     const bottomScrollTimersRef = useRef<number[]>([]);
     const loadMoreRestoreRef = useRef<{ scrollHeight: number; scrollTop: number } | null>(null);
-    const stickToBottomRef = useRef(false); // 初始为 false，完成首次滚动后再设为 true
+    const stickToBottomRef = useRef(true);
     const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const longPressStartRef = useRef<ContextMenuAnchor | null>(null);
     const longPressTriggeredRef = useRef(false);
@@ -619,10 +619,7 @@ export function MascotChatRoom({ onBack, onDeleted }: MascotChatRoomProps) {
             loadMoreRestoreRef.current = null;
             return;
         }
-        // 初始加载时强制滚动到底部，之后只在用户停留在底部时自动滚动
-        if (!initialScrollReady || stickToBottomRef.current) {
-            scheduleMascotBottomScroll(!initialScrollReady);
-        }
+        scheduleMascotBottomScroll(!initialScrollReady);
     }, [chat.hydrated, imageLoadSignature, initialScrollReady, scheduleMascotBottomScroll, scrollSignature, visibleMascotMessageCount]);
 
     useEffect(() => () => {
