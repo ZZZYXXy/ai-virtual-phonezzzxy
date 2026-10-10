@@ -1,15 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Brain, MoreHorizontal, Sparkles } from "lucide-react";
+import { Brain, Home, MoreHorizontal, Sparkles } from "lucide-react";
 import { MemoryBankPage } from "./memory/memory-bank-page";
 import { VnAssetPage } from "./vn/vn-asset-page";
+import { DwellingApp } from "./dwelling/dwelling-app";
 import { loadCharacters } from "@/lib/character-storage";
 import { PageShell } from "./ui/page-shell";
 import { FeaturedCard, type FeaturedCardItem } from "./ui/card-grid";
 import { BINDING_ACCENTS, CONTENT_APP_ACCENTS } from "@/lib/ui-accent-colors";
 
-export type ResourceSubPage = "main" | "memory" | "vn_assets";
+export type ResourceSubPage = "main" | "memory" | "vn_assets" | "dwelling";
 type MemoryView = "list" | "detail" | "settings";
 
 const RESOURCE_MENU: Omit<FeaturedCardItem, "onClick">[] = [
@@ -20,6 +21,14 @@ const RESOURCE_MENU: Omit<FeaturedCardItem, "onClick">[] = [
         desc: "角色记忆档案",
         iconColor: BINDING_ACCENTS.memory,
         glassIcon: "memory",
+    },
+    {
+        id: "dwelling",
+        icon: Home,
+        label: "记忆室",
+        desc: "角色栖所与物品",
+        iconColor: CONTENT_APP_ACCENTS.dwelling,
+        glassIcon: "dwelling",
     },
     {
         id: "vn_assets",
@@ -56,6 +65,8 @@ export function PhoneResourcesApp({ onClose, onNotice, initialPage }: { onClose:
             }
         } else if (currentPage === "vn_assets") {
             setCurrentPage("main");
+        } else if (currentPage === "dwelling") {
+            setCurrentPage("main");
         } else if (currentPage !== "main") {
             setCurrentPage("main");
         } else {
@@ -77,6 +88,7 @@ export function PhoneResourcesApp({ onClose, onNotice, initialPage }: { onClose:
                 : memoryView === "detail" ? (memoryCharName || "记忆详情")
                     : "记忆库")
             : currentPage === "vn_assets" ? "漫卷资源"
+            : currentPage === "dwelling" ? "记忆室"
                 : "资源库";
 
     const showSettingsIcon = currentPage === "memory" && memoryView !== "settings";
@@ -113,7 +125,11 @@ export function PhoneResourcesApp({ onClose, onNotice, initialPage }: { onClose:
                                         key={item.id}
                                         item={{
                                             ...item,
-                                            onClick: () => setCurrentPage(item.id === "vn_assets" ? "vn_assets" : "memory"),
+                                            onClick: () => {
+                                                if (item.id === "vn_assets") setCurrentPage("vn_assets");
+                                                else if (item.id === "dwelling") setCurrentPage("dwelling");
+                                                else if (item.id === "memory") setCurrentPage("memory");
+                                            },
                                         }}
                                     />
                                 ))}
@@ -132,6 +148,13 @@ export function PhoneResourcesApp({ onClose, onNotice, initialPage }: { onClose:
                         selectedCharId={memoryCharId}
                         onSelectChar={handleSelectChar}
                         onNotice={onNotice}
+                    />
+                )}
+
+                {currentPage === "dwelling" && (
+                    <DwellingApp
+                        onClose={() => setCurrentPage("main")}
+                        visible={currentPage === "dwelling"}
                     />
                 )}
             </div>
